@@ -134,6 +134,9 @@ rendering `0` while the footer total was correct. Build an enriched row type ins
   shared by the timeline and the dashboard feed.
 - Sidebar: brand, then nav, sharing one icon column - check alignment against the brand when
   touching it. Getting home is the Bench nav's job, above the app.
+- UI labels for stages, statuses and activity types are translated only at presentation time. Their
+  English enum values remain the API and database contract. Money stays in USD; dates, month names
+  and number separators follow the Bench locale.
 
 ## Related
 

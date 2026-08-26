@@ -103,6 +103,10 @@ The theme is Bench-wide: `web/src/shared/theme.ts` owns it, the toggle lives in 
 Space reads it like every other app. Every colour is a `:root` custom property with a
 `[data-theme="dark"]` override - do not hardcode a colour in a component.
 
+Language is Bench-wide too. Interface labels and accessibility text follow the shared English or
+Spanish locale, while page titles, block contents, property names and select options remain the
+user's data and are never written back in translation.
+
 ## Related
 
 - [REQUIREMENTS.md](./REQUIREMENTS.md) - the original product brief

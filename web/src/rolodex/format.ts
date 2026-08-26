@@ -5,6 +5,7 @@ import type {
   ImportantDateType,
 } from "./types";
 import { format, parseISO, isValid, differenceInCalendarDays } from "date-fns";
+import { currentLocale, localeCode } from "../shared/locale";
 
 export const STATUS_LABEL: Record<CheckInStatus, string> = {
   in_touch: "In touch",
@@ -46,28 +47,51 @@ export function fmtDate(
 ): string {
   if (!iso) return fallback;
   const d = parseISO(iso);
-  return isValid(d) ? format(d, "d MMM yyyy") : fallback;
+  if (!isValid(d)) return fallback;
+  if (currentLocale() === "en") return format(d, "d MMM yyyy");
+  return new Intl.DateTimeFormat(localeCode(), {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(d);
 }
 
 export function fmtDateShort(iso: string | null | undefined): string {
   if (!iso) return "—";
   const d = parseISO(iso);
-  return isValid(d) ? format(d, "d MMM") : "—";
+  if (!isValid(d)) return "—";
+  if (currentLocale() === "en") return format(d, "d MMM");
+  return new Intl.DateTimeFormat(localeCode(), {
+    day: "numeric",
+    month: "short",
+  }).format(d);
 }
 
 export function relativeDays(
   iso: string | null | undefined,
   fromToday?: string,
 ): string {
-  if (!iso) return "never contacted";
+  if (!iso)
+    return currentLocale() === "es" ? "sin contacto" : "never contacted";
   const ref = fromToday ? parseISO(fromToday) : new Date();
   // Positive is the future: the date is that many days after the day we are counting from.
   const diff = differenceInCalendarDays(parseISO(iso), ref);
+  if (currentLocale() === "es") {
+    return relativeDaysEs(diff);
+  }
   if (diff === 0) return "today";
   if (diff === 1) return "tomorrow";
   if (diff === -1) return "yesterday";
   if (diff < 0) return `${-diff} days ago`;
   return `in ${diff} days`;
+}
+
+function relativeDaysEs(diff: number): string {
+  if (diff === 0) return "hoy";
+  if (diff === 1) return "mañana";
+  if (diff === -1) return "ayer";
+  if (diff < 0) return `hace ${-diff} días`;
+  return `en ${diff} días`;
 }
 
 const AVATAR_COLORS = [
@@ -114,7 +138,12 @@ export function localTimeIn(
 }
 
 export function monthShort(month: number): string {
-  return format(new Date(2001, month - 1, 1), "MMM");
+  if (currentLocale() === "en") {
+    return format(new Date(2001, month - 1, 1), "MMM");
+  }
+  return new Intl.DateTimeFormat(localeCode(), { month: "short" }).format(
+    new Date(2001, month - 1, 1),
+  );
 }
 
 export function todayISO(): string {

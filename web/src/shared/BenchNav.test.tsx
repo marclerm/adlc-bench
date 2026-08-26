@@ -39,6 +39,13 @@ describe("BenchNav", () => {
     expect(screen.getByText("Bench")).toBeInTheDocument();
   });
 
+  it("offers English and Spanish beside the theme toggle", () => {
+    render(<BenchNav active="home" />);
+    expect(screen.getByRole("combobox", { name: "Language" })).toHaveValue(
+      "en",
+    );
+  });
+
   it("toggles the theme for every app and remembers the choice", async () => {
     render(<BenchNav active="rolodex" />);
     await userEvent.click(screen.getByRole("button", { name: /Switch to/ }));

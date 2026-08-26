@@ -1,3 +1,5 @@
+import { localeCode } from "../shared/locale";
+
 export const DEAL_STAGES = [
   "New",
   "Qualified",
@@ -178,7 +180,7 @@ export function monthRange(from: Date, back: number, forward: number): Month[] {
     const d = new Date(from.getFullYear(), from.getMonth() + i, 1);
     months.push({
       key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
-      label: d.toLocaleDateString("en-US", { month: "short" }),
+      label: d.toLocaleDateString(localeCode(), { month: "short" }),
       future: i > 0,
     });
   }
