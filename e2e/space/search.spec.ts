@@ -40,7 +40,8 @@ test("keyboard-only quick-find: arrows plus Enter jump to the selection", async 
   await page.goto("/space/");
   await page.keyboard.press("ControlOrMeta+k");
   await page.keyboard.type("japan");
-  await expect(page.getByRole("option").first()).toBeVisible();
+  const results = page.getByRole("listbox", { name: "Search results" });
+  await expect(results.getByRole("option").first()).toBeVisible();
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("ArrowUp");
   await page.keyboard.press("Enter");

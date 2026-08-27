@@ -14,6 +14,7 @@ import {
   IconSun,
 } from "./AppIcons";
 import { currentTheme, toggleTheme, type Theme } from "./theme";
+import { currentLocale, setLocale, t, type Locale } from "./locale";
 import "./nav.css";
 
 type AppKey = "home" | "crm" | "space" | "rolodex" | "groove";
@@ -36,13 +37,18 @@ const APPS: {
 
 export default function BenchNav({ active }: { active: AppKey }) {
   const [theme, setTheme] = useState<Theme>(currentTheme);
+  const [locale, setLocaleState] = useState<Locale>(currentLocale);
+  const changeLocale = (next: Locale) => {
+    setLocale(next);
+    setLocaleState(next);
+  };
   return (
     <header className="bench-nav">
       <span className="bench-nav-brand">
         <BenchMark size={21} />
         Bench
       </span>
-      <nav className="bench-nav-links" aria-label="Primary">
+      <nav className="bench-nav-links" aria-label={t("Primary")}>
         {APPS.map(({ key, href, label, Icon }) => (
           <a
             key={key}
@@ -51,7 +57,7 @@ export default function BenchNav({ active }: { active: AppKey }) {
             aria-current={key === active ? "page" : undefined}
           >
             <Icon size={16} />
-            {label}
+            {label === "Home" ? t("Home") : label}
           </a>
         ))}
       </nav>
@@ -59,11 +65,23 @@ export default function BenchNav({ active }: { active: AppKey }) {
         type="button"
         className="bench-nav-theme"
         onClick={() => setTheme(toggleTheme())}
-        aria-label={theme === "dark" ? "Switch to light" : "Switch to dark"}
-        title={theme === "dark" ? "Switch to light" : "Switch to dark"}
+        aria-label={
+          theme === "dark" ? t("Switch to light") : t("Switch to dark")
+        }
+        title={theme === "dark" ? t("Switch to light") : t("Switch to dark")}
       >
         {theme === "dark" ? <IconSun size={16} /> : <IconMoon size={16} />}
       </button>
+      <label className="bench-nav-language">
+        <span>{t("Language")}</span>
+        <select
+          value={locale}
+          onChange={(event) => changeLocale(event.target.value as Locale)}
+        >
+          <option value="en">{t("English")}</option>
+          <option value="es">{t("Spanish")}</option>
+        </select>
+      </label>
     </header>
   );
 }

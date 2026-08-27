@@ -1,7 +1,8 @@
 /** Display formatting for the money and date values the CRM shows. */
+import { currentLocale, localeCode } from "../shared/locale";
 
 export function formatMoney(value: number): string {
-  return value.toLocaleString("en-US", {
+  return value.toLocaleString(localeCode(), {
     style: "currency",
     currency: "USD",
     maximumFractionDigits: 0,
@@ -20,13 +21,21 @@ function parse(iso: string): Date {
 /** Rounded to thousands, for the pipeline cards where the exact figure is already above it. */
 export function formatMoneyCompact(value: number): string {
   if (Math.abs(value) < 1000) return formatMoney(value);
+  if (currentLocale() === "es") {
+    return value.toLocaleString(localeCode(), {
+      style: "currency",
+      currency: "USD",
+      notation: "compact",
+      maximumFractionDigits: 1,
+    });
+  }
   const thousands = (value / 1000).toFixed(1).replace(/\.0$/, "");
   return `$${thousands}k`;
 }
 
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return "—";
-  return parse(iso).toLocaleDateString("en-US", {
+  return parse(iso).toLocaleDateString(localeCode(), {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -35,8 +44,9 @@ export function formatDate(iso: string | null | undefined): string {
 
 /** Month and day only, for the pipeline cards, where a year would not earn its width. */
 export function formatDateShort(iso: string | null | undefined): string {
-  if (!iso) return "No close date";
-  return parse(iso).toLocaleDateString("en-US", {
+  if (!iso)
+    return currentLocale() === "es" ? "Sin fecha de cierre" : "No close date";
+  return parse(iso).toLocaleDateString(localeCode(), {
     month: "short",
     day: "numeric",
   });
@@ -44,7 +54,7 @@ export function formatDateShort(iso: string | null | undefined): string {
 
 export function formatDateTime(iso: string): string {
   const d = new Date(iso.replace(" ", "T") + "Z");
-  return d.toLocaleString("en-US", {
+  return d.toLocaleString(localeCode(), {
     month: "short",
     day: "numeric",
     year: "numeric",

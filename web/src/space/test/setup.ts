@@ -2,6 +2,19 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 import { afterEach, beforeEach, vi } from "vitest";
 
+// Node 26 exposes an unavailable localStorage global unless it was started with a storage file.
+const stored = new Map<string, string>();
+const testStorage: Storage = {
+  get length() {
+    return stored.size;
+  },
+  clear: () => stored.clear(),
+  getItem: (key) => stored.get(key) ?? null,
+  key: (index) => [...stored.keys()][index] ?? null,
+  removeItem: (key) => stored.delete(key),
+  setItem: (key, value) => stored.set(key, value),
+};
+
 // jsdom implements no pointer capture, so Groove's knobs and faders throw on pointerdown without
 // this. Capture only decides which element receives the rest of a drag, and these tests dispatch
 // straight at the target, so a no-op loses nothing.
@@ -25,6 +38,15 @@ if (!(Blob.prototype.text as unknown))
   };
 
 beforeEach(() => {
+  testStorage.clear();
+  Object.defineProperty(globalThis, "localStorage", {
+    configurable: true,
+    value: testStorage,
+  });
+  Object.defineProperty(window, "localStorage", {
+    configurable: true,
+    value: testStorage,
+  });
   // The editor flushes pending block edits with a raw keepalive fetch when it unmounts. Node's
   // fetch rejects relative URLs, so keep every test off the real one; suites that assert on
   // requests stub it again themselves.
@@ -40,6 +62,6 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
-  localStorage.clear();
+  testStorage.clear();
   delete document.documentElement.dataset.theme;
 });

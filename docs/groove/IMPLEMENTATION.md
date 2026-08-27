@@ -36,6 +36,10 @@ Note `getByRole` matches names as substrings, so `BASS step 1` also matches step
 
 ## What can and cannot be tested
 
+The Bench navigation is translated, but patch names and conventional instrument controls remain
+English. Unit/model names, lanes, parameters, notes, BPM, steps and master controls are part of the
+instrument surface covered by the internationalization exception, not untranslated UI defects.
+
 The tests are **deliberately shallow and assert nothing about sound**. They cover: the four units
 render, the transport starts and stops, the playhead advances, drum steps toggle, patches change the
 tempo, a unit mutes, and nothing logs a console error.

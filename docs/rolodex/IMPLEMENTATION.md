@@ -104,6 +104,9 @@ Anything below is a difference from `projects/rolodex`, not a decision to revisi
 
 ## Things that will bite
 
+- Circle, status, interaction and important-date strings are presentation labels. Changing locale
+  changes those labels and date formatting, never the canonical values sent to the API.
+
 - **`react-calendar` ships its own stylesheet** and it is written for a light page. The overrides
   in `styles.css` are not decoration: without the two rules for `:disabled` and `:focus` on the
   navigation buttons, the month label sits on a white block in dark mode.

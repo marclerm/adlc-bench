@@ -60,8 +60,9 @@ test("slash menu inserts a heading using the keyboard alone", async ({
 }) => {
   await freshPage(page, `Slash Keyboard ${Date.now()}`);
   await page.keyboard.type("/head");
-  await expect(page.getByRole("listbox")).toBeVisible();
-  await expect(page.getByRole("option")).toHaveCount(3);
+  const blockTypes = page.getByRole("listbox", { name: "Block types" });
+  await expect(blockTypes).toBeVisible();
+  await expect(blockTypes.getByRole("option")).toHaveCount(3);
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("Enter");
   await expect(page.getByRole("listbox")).toHaveCount(0);
@@ -78,8 +79,9 @@ test("slash menu inserts a heading using the keyboard alone", async ({
 test("slash menu works with the mouse", async ({ page }) => {
   await freshPage(page, `Slash Mouse ${Date.now()}`);
   await page.keyboard.type("/");
-  await expect(page.getByRole("option")).toHaveCount(11);
-  await page.getByRole("option", { name: "Quote" }).click();
+  const blockTypes = page.getByRole("listbox", { name: "Block types" });
+  await expect(blockTypes.getByRole("option")).toHaveCount(11);
+  await blockTypes.getByRole("option", { name: "Quote" }).click();
   await page.keyboard.type("Clicked into being");
   await expect(page.locator(".b-quote-text")).toHaveText("Clicked into being");
 });

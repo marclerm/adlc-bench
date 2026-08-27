@@ -113,7 +113,7 @@ These are settled. Changing one is a project-level decision, not an implementati
   `appFallback` plugin in `web/vite.config.ts` does the same for the dev server. Without it a
   refresh on `/crm/contacts` serves the launcher. Both carry the same `APPS` list, and they have
   disagreed before - check both when you touch routing.
-- **One shared module: `web/src/shared/`.** The navigation strip and the theme are the only code
+- **One shared module: `web/src/shared/`.** The navigation strip, theme and UI locale are the only code
   the five documents have in common, and the `no-restricted-imports` rule allows it because that
   rule is a denylist of the sibling apps, not an allowlist. **Its CSS has to be self-contained.**
   It loads into five stylesheets that collide on `.brand` and `:root`, each app redefines its own
@@ -128,6 +128,11 @@ These are settled. Changing one is a project-level decision, not an implementati
   defines its palette twice - once on `:root`, once under `[data-theme="dark"]` - and sets
   `color-scheme` so native controls follow. Groove is the exception in direction only: it is dark
   by default and defines `[data-theme="light"]`.
+- **One language, chosen once.** `web/src/shared/locale.ts` writes `lang` on the document and stores
+  English or Spanish under `bench.locale`; every entry point initializes it before rendering, just
+  like the theme. The shared catalogs contain UI copy only. Locale-aware formatters own dates and
+  numbers, while canonical API values and SQLite data remain unchanged. Groove's patch names and
+  conventional instrument controls deliberately remain English.
 - **Colour means state, not identity.** In the strip and on the launcher, amber marks the app you
   are in and nothing else; the apps are told apart by their glyph. That is what keeps a fifth app
   from needing a fifth brand colour. Inside an app, its own accents are its own business.

@@ -122,3 +122,40 @@
   color: #ffffff;
   background: #272d36;
 }
+.bench-nav-language {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+  color: #5b636e;
+  font:
+    600 11px/1 system-ui,
+    sans-serif;
+}
+
+.bench-nav-language select {
+  height: 28px;
+  border: 1px solid #c8cdd4;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #1c2128;
+  padding: 0 24px 0 7px;
+  font:
+    600 11px/1 system-ui,
+    sans-serif;
+}
+
+[data-theme="dark"] .bench-nav-language {
+  color: #98a1ad;
+}
+
+[data-theme="dark"] .bench-nav-language select {
+  border-color: #4b5563;
+  background: #20242a;
+  color: #f9fafb;
+}
+
+.bench-nav-language select:focus-visible {
+  outline: 2px solid #ecad0a;
+  outline-offset: 1px;
+}
